@@ -5,7 +5,7 @@ ANSIBLE_CONTROL_NODE_URL='https://github.com/OOHehir/ansible_rpi.git'
 
 first_boot_setup () {
     apt update
-    apt install ansible-core git -y
+    apt install ansible-core git apache2 -y
 
     # Clone the ansible repository
     cd $ANSIBLE_PATH

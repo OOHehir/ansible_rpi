@@ -6,10 +6,8 @@
     ansible_connection: local
     ansible_python_interpreter: "{{ansible_playbook_python}}"
     repo_path: /home/ansible
-    user_path: /home/octopus
-    file_list:
-      - givEnergy_control.py
-      - parse_rest.py
+    py_dest_path: /home/octopus
+    www_dest_path: /var/www/html
   become: true
   become_user: root
   become_method: ansible.builtin.sudo
@@ -22,11 +20,22 @@
         state: directory
         mode: "0755"
 
-    - name: Update python scripts
+    - name: Update Python scripts
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ user_path }}"
+        dest: "{{ py_dest_path }}"
         mode: "0644"
         owner: octopus
         group: octopus
-      loop: "{{ file_list }}"
+      with_fileglob:
+        - "{{ repo_path }}/python_scripts/*.py"
+
+    - name: Update webserver files
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ www_dest_path }}"
+        mode: "0644"
+        owner: octopus
+        group: octopus
+      with_fileglob:
+        - "{{ repo_path }}/webpages/*"
