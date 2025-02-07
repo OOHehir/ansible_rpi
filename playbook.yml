@@ -5,7 +5,7 @@
   vars:
     ansible_connection: local
     ansible_python_interpreter: "{{ansible_playbook_python}}"
-    repo_path: /home/ansible/ansible_rpi
+    repo_path: /home/octopus/ansible/ansible_rpi/
     py_dest_path: /home/octopus
     www_dest_path: /var/www/html
   become: true
