@@ -1,29 +1,31 @@
 # Routine playbook
----
-- hosts: all
-  become: yes
-  become_user: root
-  become_method: sudo
-  gather_facts: yes
+- name: Routine playbook
+  hosts: localhost
   vars:
+    ansible_connection: local
+    ansible_python_interpreter: "{{ansible_playbook_python}}"
     repo_path: /home/ansible
     user_path: /home/octopus
     file_list:
       - givEnergy.py
       - parse_rest.py
+  become: true
+  become_user: root
+  become_method: ansible.builtin.sudo
+  gather_facts: true
 
   tasks:
-  - name: Create a directory if it does not exist
-    ansible.builtin.file:
-    path: /home/octopus
-    state: directory
-    mode: '0755'
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/octopus
+        state: directory
+        mode: "0755"
 
-  - name: Update python scripts
-    ansible.builtin.copy:
-      src: '{{item}}'
-      dest: '{{ user_path }}'
-      mode: '0644'
-      owner: octopus
-      group: octopus
-    loop: '{{ file_list }}'
+    - name: Update python scripts
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ user_path }}"
+        mode: "0644"
+        owner: octopus
+        group: octopus
+      loop: "{{ file_list }}"

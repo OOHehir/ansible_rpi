@@ -24,8 +24,8 @@ update_and_run_ansible () {
     # A little artificial but use eventually use this to update & run
     ansible-pull -U $ANSIBLE_PATH/ansible_rpi -C main playbook.yml
 
-    # log the operation
-    rm $ANSIBLE_PATH/ansible.log
+    # log the operation, continue if file doesn't exist
+    rm $ANSIBLE_PATH/ansible.log || true
     echo $(date) > $ANSIBLE_PATH/ansible.log
 }
 
