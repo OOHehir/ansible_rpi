@@ -7,7 +7,7 @@
     repo_path: /home/ansible
     user_path: /home/octopus
     file_list:
-      - givEnergy.py
+      - givEnergy_control.py
       - parse_rest.py
   become: true
   become_user: root
