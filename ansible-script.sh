@@ -17,12 +17,12 @@ first_boot_setup () {
 
 update_and_run_ansible () {
     # Pull latest changes from the git repository
-    cd $ANSIBLE_PATH
+    cd $ANSIBLE_PATH/ansible_rpi
     # Probably need to change this to a curl from a server
     git pull
 
     # A little artificial but use eventually use this to update & run
-    ansible-pull -U $ANSIBLE_PATH -C main playbook.yml
+    ansible-pull -U $ANSIBLE_PATH/ansible_rpi -C main playbook.yml
 
     # log the operation
     rm $ANSIBLE_PATH/ansible.log
