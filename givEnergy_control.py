@@ -35,7 +35,7 @@ from datetime import datetime, timedelta
 host = 'http://localhost:6345/'     # Local
 #host = 'http://localhost:7345/'    # Remote - running from AWS
 
-log_file = 'givEnergy_log.txt'
+log_file = '/var/www/html/givEnergy_log.txt'
 
 BATTERY_DEFAULT_RATE = 300
 
