@@ -35,7 +35,7 @@ from datetime import datetime, timedelta
 host = 'http://localhost:6345/'     # Local
 #host = 'http://localhost:7345/'    # Remote - running from AWS
 
-log_file = '/var/www/html/givEnergy_log.txt'
+log_file = 'givEnergy_log.txt'
 
 BATTERY_DEFAULT_RATE = 300
 
@@ -44,19 +44,13 @@ battery_mode_urls =  [  'enableChargeSchedule',
                         ]
 
 charge_urls =  ['enableDischarge',
-                'setBatteryMode',
-                'setChargeRate',
-                'setChargeSlot1',
-                'enableChargeTarget',
-                'enableChargeSchedule',
-                ]
+                'forceCharge',
+  				'setChargeRate']
 
-discharge_urls =  [ 'setBatteryMode',
-                    'enableChargeSchedule',
-                    'setDischargeSlot1',
-                    'setDischargeRate',
-                    'enableDischargeSchedule',
-                ]
+discharge_urls =  ['enableChargeSchedule',
+                   'enableDischarge',
+                   'forceExport',
+                   'setDischargeRate',]
 
 def check_input(input: list) -> dict:
     '''
@@ -126,12 +120,10 @@ def set_battery_payload(json_dict: dict) -> tuple[list[str], list[str]]:
         exit()
     elif json_dict['data'] >= 0 and json_dict['data'] < 98:
         # Discharge
-        payload = [ '{"mode":"Timed Export"}',
-                    '{"state":"disable"}',
-                    '{"start": "' + format(hour_ago) + '", "finish": "' + format(hour_ahead) + '", "dischargeToPercent":"' + format(json_dict['data']) + '"}',
-                    '{"dischargeRate":"' + format(rate) + '"}',
+        payload = [ '{"state":"disable"}',
                     '{"state":"enable"}',
-                    ]
+                    '{"duration":"30"}',
+                   '{"dischargeRate":"' + format(rate) + '"}',]
         log_to_file("Payload: " + format(payload))
         return payload, discharge_urls
     elif json_dict['data'] > 100 and json_dict['data'] <= 103:
@@ -145,11 +137,8 @@ def set_battery_payload(json_dict: dict) -> tuple[list[str], list[str]]:
         # Note: need to correct the level!
         level = json_dict['data'] - 100
         payload = [ '{"state":"disable"}',
-                    '{"state":"disable"}',
-                    '{"chargeRate":"' + format(rate) + '"}',
-                    '{"start": "' + format(hour_ago) + '", "finish": "' + format(hour_ahead) + '", "chargeToPercent":"' + format(level) + '"}',
-                    '{"state":"enable"}',
-                    '{"state":"enable"}']
+                    '{"duration":"30"}',
+          			'{"chargeRate":"' + format(rate) + '"}']
         log_to_file("Sending: " + format(payload))
         return payload, charge_urls
     else:
@@ -180,7 +169,7 @@ def send_battery_payload(payload: list, urls: list) -> None:
             log_to_file("Response: FAIL")
         sleep(1)
 
-def set_battery_rate(data: dict) -> None:
+def set_battery_rate(json_dict: dict) -> None:
     '''
     Set battery rate
     Note: This function corrects the rate & stores to file for later use
@@ -198,7 +187,6 @@ def set_battery_rate(data: dict) -> None:
         log_to_file("Stored battery rate " + format(rate))
     else:
         print("Invalid data value")
-        sys.exit()
 
 if __name__ == "__main__":
     json_dict = check_input(sys.argv)
