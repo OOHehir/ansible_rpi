@@ -1,0 +1,11 @@
+[Unit]
+Description=Start Python script to flash LED to indicate network state
+
+[Service]
+Restart=on-failure
+RestartSec=10
+Type=idle
+ExecStart=/bin/bash -c 'cd /home/octopus/ && python led_driver.py'
+
+[Install]
+WantedBy=multi-user.target
