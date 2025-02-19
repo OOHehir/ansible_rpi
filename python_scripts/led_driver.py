@@ -14,7 +14,7 @@ except ImportError:
     sys.exit(1)
 
 LED_COUNT = 1        # Number of LED pixels.
-LED_PIN = 18          # GPIO pin connected to the pixels (must support PWM! GPIO 13 and 18 on RPi 3).
+LED_PIN = 21          # GPIO pin connected to the pixels (must support PWM! GPIO 13 and 18 on RPi 3).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA = 10          # DMA channel to use for generating signal (Between 1 and 14)
 LED_BRIGHTNESS = 30   # Set to 0 for darkest and 255 for brightest
