@@ -14,6 +14,30 @@
   gather_facts: true
 
   tasks:
+    - name: Update the system
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+
+    - name: Ensure apt packages are installed
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - git
+        - apache2
+        - python3
+        - python3-pip
+
+    - name: Ensure pip packages installed
+      ansible.builtin.pip:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - rpi_ws281x
+
     - name: Create a directory if it does not exist
       ansible.builtin.file:
         path: /home/octopus
@@ -39,3 +63,29 @@
         group: octopus
       with_fileglob:
         - "{{ repo_path }}/webpages/*"
+
+    - name: Install service file
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /etc/systemd/system/
+        mode: "0644"
+        owner: root
+        group: root
+      with_items:
+        - /misc/led.service/led.service
+
+    - name: Check LED service status
+      ansible.builtin.systemd:
+        name: led.service
+        state: started
+        enabled: yes
+
+    - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
+      # Restart required if this file is not previously present
+      ansible.builtin.copy:
+        src: "{{ repo_path }}/misc/blacklist-bcm2835.conf"
+        dest: /etc/modprobe.d/
+        mode: "0644"
+        owner: root
+        group: root
+        force: false
