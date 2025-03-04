@@ -4,16 +4,15 @@
     Note: This script is expected to be located in /home/octopus
 
 '''
-
-import requests
 import json
 import sys
+import requests
 
 # Use these characters to identify the start and end of the data
 # Easier to parse on micro-controllers
-start_data = '{'
-separate_data = ': '
-end_data = '}'
+START_DATA = '{'
+SEPARATE_DATA = ': '
+END_DATA = '}'
 
 # REST API URL
 host = 'http://localhost:6345/'  # Local
@@ -61,8 +60,8 @@ else:
     # Format: {"key": value}
     for item in search_json(data, sys.argv[1]):
         if isinstance(item, int):
-            print (start_data + "\"" + sys.argv[1] + "\"" + separate_data + str(item) + end_data)
+            print (START_DATA + "\"" + sys.argv[1] + "\"" + SEPARATE_DATA + str(item) + END_DATA)
         else:
             # Add quotes to the string
-            print (start_data + "\"" + sys.argv[1] + "\"" + separate_data + "\"" + str(item) + "\"" + end_data)
+            print (START_DATA + "\"" + sys.argv[1] + "\"" + SEPARATE_DATA + "\"" + str(item) + "\"" + END_DATA)
     sys.exit(0)
