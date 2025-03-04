@@ -11,62 +11,65 @@ except RuntimeError:
 import time
 import os
 import subprocess
-import RPi.GPIO as GPIO
 
-time_pressed = 0
-BUTTON_GPIO = 22
-
-def button_event(time_p: float) -> None:
+class ButtonDriver:
     """
-    Handle the button press event
+    Class to handle the button press event
     """
-    if time_p >5:
-        check_cmd = "sudo wpa_cli -i wlan0 status | grep -Fxq wpa_state=SCANNING"
-        status = subprocess.check_output(check_cmd, shell=True)
-        if status == 0:
-            print("WPS is in progress")
-            return
+    def __init__(self, button_gpio: int):
+        self.time_pressed = 0
+        self.button_gpio = button_gpio
+        self.setup_gpio()
 
-        # Clear the network
-        clear_cmd = "sudo sed  -i '/network={/,$d' /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
-        os.system(clear_cmd)
-        time.sleep(5)
+    def setup_gpio(self):
+        """
+        Setup the GPIO
+        """
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setwarnings(True)
+        GPIO.setup(self.button_gpio, GPIO.IN, pull_up_down=None)
+        GPIO.add_event_detect(self.button_gpio, GPIO.FALLING, callback=self.falling_edge_callback, bouncetime=100)
+        GPIO.add_event_detect(self.button_gpio, GPIO.RISING, callback=self.rising_edge_callback, bouncetime=100)
 
-        # Start WPS
-        print("Starting WPS")
-        start_cmd = "sudo wpa_cli -i wlan0 wps_pbc"
-        os.system(start_cmd)
+    def button_event(self, time_p: float) -> None:
+        """
+        Handle the button press event
+        """
+        if time_p > 5:
+            check_cmd = "sudo wpa_cli -i wlan0 status | grep -Fxq wpa_state=SCANNING"
+            status = subprocess.check_output(check_cmd, shell=True)
+            if status == 0:
+                print("WPS is in progress")
+                return
 
-    if time_p > 3:
-        print(f"Button pressed for {time_p} seconds")
+            # Clear the network
+            clear_cmd = "sudo sed  -i '/network={/,$d' /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
+            os.system(clear_cmd)
+            time.sleep(5)
 
-def rising_edge_callback():
-    """
-    Handle the rising edge event
-    """
-    global time_pressed
-    time_pressed = time.time() - time_pressed
-    button_event(time_pressed)
-    time_pressed = 0
+            # Start WPS
+            print("Starting WPS")
+            start_cmd = "sudo wpa_cli -i wlan0 wps_pbc"
+            os.system(start_cmd)
 
-def falling_edge_callback():
-    """
-    Handle the falling edge event
-    """
-    global time_pressed
-    time_pressed = time.time()
+        if time_p > 3:
+            print(f"Button pressed for {time_p} seconds")
+
+    def rising_edge_callback(self):
+        """
+        Handle the rising edge event
+        """
+        self.time_pressed = time.time() - self.time_pressed
+        self.button_event(self.time_pressed)
+        self.time_pressed = 0
+
+    def falling_edge_callback(self):
+        """
+        Handle the falling edge event
+        """
+        self.time_pressed = time.time()
 
 if __name__ == '__main__':
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setwarnings(True)
-    GPIO.setup(BUTTON_GPIO, GPIO.IN, pull_up_down=None)
-
-    GPIO.event_detected(BUTTON_GPIO)
-    GPIO.add_event_detect(BUTTON_GPIO, GPIO.FALLING, callback=falling_edge_callback(), bouncetime=100)
-    GPIO.add_event_detect(BUTTON_GPIO, GPIO.RISING, callback=rising_edge_callback(), bouncetime=100)
-
+    button_driver = ButtonDriver(button_gpio=22)
     while True:
-        time.sleep(1)
-
-    # Unreachable code
-    GPIO.cleanup()
+        pass
