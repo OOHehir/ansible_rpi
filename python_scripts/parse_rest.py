@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
+''' Application to get a REST API request from a server with a JSON payload
+    ./parse_rest.py Battery_SOC
+    Note: This script is expected to be located in /home/octopus
 
-# Python application to get a REST API request from a server with a JSON payload
-#
-# Test:
-# ./parse_rest.py Battery_SOC
-#
-# Note: This script is expected to be located in /home/rufilla
+'''
 
 import requests
 import json
