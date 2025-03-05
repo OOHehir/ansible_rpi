@@ -5,6 +5,8 @@ import time
 from threading import Thread
 import subprocess
 import sys
+import os
+import logging
 
 try:
     from rpi_ws281x import ws, Color, Adafruit_NeoPixel
@@ -37,23 +39,28 @@ def check_internet_connection():
     global NETWORK_CONNECTED
     while True:
         try:
-            subprocess.check_output(["ping", "-c", "1", "8.8.8.8"], timeout=3, stderr=subprocess.STDOUT)
+            subprocess.check_output(["ping", "-c", "1", "8.8.8.8"], stderr=subprocess.STDOUT)
             NETWORK_CONNECTED = True
         except subprocess.CalledProcessError:
             NETWORK_CONNECTED = False
         time.sleep(10)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    # Check if sudo
+    if os.geteuid() != 0:
+        logging.warning("Please run with sudo")
+        sys.exit(1)
+
     strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ,
                                LED_DMA, LED_INVERT, LED_BRIGHTNESS,
                                LED_CHANNEL, LED_STRIP)
 
     strip1.begin()
-    # Start the thread to check the internet connection
-    thread = Thread(target=check_internet_connection)
-    thread.start()
 
-    while thread.is_alive:
+    thread = Thread(target=check_internet_connection)
+
+    while True:
         for _ in range(2):
             if NETWORK_CONNECTED:
                 # Set the LED color to green
@@ -69,8 +76,12 @@ if __name__ == '__main__':
             strip1.show()
             time.sleep(0.1)
         time.sleep(0.8)
-    thread.join()
-    print("Quitting the program")
-    strip1.setPixelColor(1, BLACK)
-    strip1.show()
-    sys.exit(1)
+        if not thread.is_alive():
+            logging.warning("Thread is dead, restarting")
+            thread.start()
+
+    # thread.join()
+    # print("Quitting the program")
+    # strip1.setPixelColor(1, BLACK)
+    # strip1.show()
+    # sys.exit(1)
