@@ -37,7 +37,7 @@ def check_internet_connection():
     global NETWORK_CONNECTED
     while True:
         try:
-            subprocess.check_output(["ping", "-c", "1", "8.8.8.8"])
+            subprocess.check_output(["ping", "-c", "1", "8.8.8.8"], timeout=3, stderr=subprocess.STDOUT)
             NETWORK_CONNECTED = True
         except subprocess.CalledProcessError:
             NETWORK_CONNECTED = False
