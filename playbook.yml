@@ -5,7 +5,7 @@
   vars:
     ansible_connection: local
     ansible_python_interpreter: "{{ansible_playbook_python}}"
-    repo_path: /home/octopus/ansible/ansible_rpi/
+    repo_path: /home/octopus/ansible/
     py_dest_path: /home/octopus
     www_dest_path: /var/www/html
   become: true
@@ -73,9 +73,9 @@
         owner: root
         group: root
       with_items:
-        - /misc/led.service/led.service
-        - /misc/button.service/button.service
-        - /misc/ansible.service/ansible.service
+        - "{{ repo_path }}/misc/led.service/led.service"
+        - "{{ repo_path }}/misc/button.service/button.service"
+        - "{{ repo_path }}/misc/ansible.service/ansible.service"
 
     - name: Check services started
       ansible.builtin.systemd:
