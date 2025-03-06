@@ -5,6 +5,7 @@ After=network-online.target
 
 [Service]
 Restart=always
+RestartSec=10
 RuntimeMaxSec=12hr
 ExecStart=/usr/bin/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d /home/octopus/ansible/ --clean --diff playbook.yml
 User=ansible
