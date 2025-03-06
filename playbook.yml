@@ -73,9 +73,9 @@
         owner: root
         group: root
       with_items:
-        - "{{ repo_path }}/misc/led.service/led.service"
-        - "{{ repo_path }}/misc/button.service/button.service"
-        - "{{ repo_path }}/misc/ansible.service/ansible.service"
+        - "{{ repo_path }}misc/led.service/led.service"
+        - "{{ repo_path }}misc/button.service/button.service"
+        - "{{ repo_path }}misc/ansible.service/ansible.service"
 
     - name: Check services started
       ansible.builtin.systemd:
