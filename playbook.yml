@@ -53,7 +53,7 @@
         owner: octopus
         group: octopus
       with_fileglob:
-        - "{{ repo_path }}python_scripts/*.py"
+        - "python_scripts/*.py"
 
     # - name: Update webserver files
     #   ansible.builtin.copy:
@@ -74,12 +74,18 @@
         group: root
       with_items:
         - /misc/led.service/led.service
+        - /misc/button.service/button.service
+        - /misc/ansible.service/ansible.service
 
-    - name: Check LED service status
+    - name: Check services started
       ansible.builtin.systemd:
-        name: led.service
+        name: "{{ item }}"
         state: started
         enabled: true
+      with_items:
+        - led.service
+        - button.service
+        - ansible.service
 
     - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
       # Restart required if this file is not previously present
