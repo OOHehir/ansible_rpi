@@ -5,8 +5,9 @@
   vars:
     ansible_connection: local
     ansible_python_interpreter: "{{ansible_playbook_python}}"
+    docker_requirements: [libffi-dev, libssl-dev]
     repo_path: /home/octopus/ansible/
-    py_dest_path: /home/octopus
+    home_folder: /home/octopus
     www_dest_path: /var/www/html
     giv_tcp_path: /home/octopus/giv_tcp
   become: true
@@ -22,6 +23,12 @@
         autoremove: true
         autoclean: true
 
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/octopus
+        state: directory
+        mode: "0755"
+
     - name: Ensure apt packages are installed
       ansible.builtin.apt:
         name: "{{ item }}"
@@ -30,9 +37,20 @@
         - git
         - python3
         - python3-pip
-        - Docker
         # MQTT broker:
         - mosquitto
+        - "{{ docker_requirements }}"
+
+    - name: Get Docker Convenience Script
+      ansible.builtin.get_url:
+        url: https://get.docker.com
+        dest: "{{ home_folder }}get-docker.sh"
+        mode: '0755'
+
+    - name: Install Docker
+      ansible.builtin.command:
+        cmd: sh "{{ home_folder }}get-docker.sh"
+        creates: /usr/bin/docker
 
     - name: Ensure pip packages installed
       ansible.builtin.pip:
@@ -42,17 +60,19 @@
         - rpi_ws281x
         - RPi.GPIO
         - flask
+        # Probably need to have run Docker script above first?
+        - docker-compose
 
-    - name: Create a directory if it does not exist
-      ansible.builtin.file:
-        path: /home/octopus
-        state: directory
-        mode: "0755"
+    - name: Make octopus user execute docker commands
+      ansible.builtin.user:
+        name: octopus
+        groups: docker
+        append: true
 
     - name: Update Python scripts
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ py_dest_path }}"
+        dest: "{{ home_folder }}"
         mode: "0644"
         owner: octopus
         group: octopus
