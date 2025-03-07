@@ -8,6 +8,7 @@
     repo_path: /home/octopus/ansible/
     py_dest_path: /home/octopus
     www_dest_path: /var/www/html
+    giv_tcp_path: /home/octopus/giv_tcp
   become: true
   become_user: root
   become_method: ansible.builtin.sudo
@@ -29,6 +30,9 @@
         - git
         - python3
         - python3-pip
+        - Docker
+        # MQTT broker:
+        - mosquitto
 
     - name: Ensure pip packages installed
       ansible.builtin.pip:
@@ -86,6 +90,7 @@
         - led.service
         - button.service
         - ansible.service
+        - mosquitto.service
 
     - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
       # Restart required if this file is not previously present
@@ -96,3 +101,15 @@
         owner: root
         group: root
         force: false
+
+    - name: Checkout giv_tcp repository
+      ansible.builtin.git:
+        repo: 'https://github.com/britkat1980/giv_tcp.git'
+        dest: "{{ giv_tcp_path }}"
+        version: master
+        update: true
+
+    - name: Restart the giv_tcp Docker containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ giv_tcp_path }}"
+        state: restarted
