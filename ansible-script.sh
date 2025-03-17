@@ -9,7 +9,8 @@ first_boot_setup () {
     apt install git python3-pip -y
 
     # Install pip and ansible
-    python3 -m pip install --user ansible-core
+    echo "Installing ansible"pip
+    python3 -m pip install --user ansible
 
     # Clone the ansible repository
     # cd $ANSIBLE_PATH
