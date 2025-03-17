@@ -126,7 +126,7 @@
       ansible.builtin.git:
         repo: 'https://github.com/britkat1980/giv_tcp.git'
         dest: "{{ giv_tcp_path }}"
-        version: master
+        version: main
         update: true
 
     - name: Restart the giv_tcp Docker containers
