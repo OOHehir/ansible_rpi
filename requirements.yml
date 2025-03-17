@@ -1,2 +1,3 @@
 collections:
+# Need Ansible/ansible-base versions >= 2.15.0
 - name: community.docker
