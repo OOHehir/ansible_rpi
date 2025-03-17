@@ -126,6 +126,8 @@
       ansible.builtin.git:
         repo: 'https://github.com/britkat1980/giv_tcp.git'
         dest: "{{ giv_tcp_path }}"
+        owner: octopus
+        group: octopus
         version: main
         update: true
 
