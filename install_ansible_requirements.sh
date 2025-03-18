@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
+ANSIBLE_BIN_PATH=/home/octopus/.local/bin
 
-ansible-galaxy collection install -r requirements.yml
+$ANSIBLE_BIN_PATH/ansible-galaxy collection install -r requirements.yml
