@@ -124,7 +124,19 @@
       become: true
       become_user: octopus
 
+    - name: Modify docker-compose file
+      # Replace - c:\config\GivTCP:/config/GivTCP with - /home/octopus/giv_tcp/config:/config/GivTCP
+      ansible.builtin.lineinfile:
+        path: "{{ giv_tcp_path }}/docker-compose.yml"
+        regexp: '^- /config/GivTCP'
+        line: '- /home/octopus/giv_tcp/config:/config/GivTCP'
+        state: present
+      become: true
+      become_user: octopus
+
     - name: Restart the giv_tcp Docker containers
       community.docker.docker_compose_v2:
         project_src: "{{ giv_tcp_path }}"
         state: restarted
+      become: true
+      become_user: system
