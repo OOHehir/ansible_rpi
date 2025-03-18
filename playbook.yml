@@ -13,7 +13,7 @@
   become: true
   become_user: root
   become_method: ansible.builtin.sudo
-  gather_facts: true
+  gather_facts: false
 
   tasks:
     - name: Update the system
@@ -140,3 +140,4 @@
         state: restarted
       become: true
       become_user: root
+      register: output
