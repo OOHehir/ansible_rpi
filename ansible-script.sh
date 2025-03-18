@@ -6,11 +6,12 @@ ANSIBLE_CONTROL_NODE_URL='https://github.com/OOHehir/ansible_rpi.git'
 first_boot_setup () {
     # Apt update and install git
     apt update
+    echo "Installing git, python3-pip"
     apt install git python3-pip -y
 
-    # Install pip and ansible
-    echo "Installing ansible"pip
-    python3 -m pip install --user ansible
+    # Install pip and ansible for user octopus
+    echo "Installing ansible"
+    python3 -m pip install ansible
 
     # Clone the ansible repository
     # cd $ANSIBLE_PATH
