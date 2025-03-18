@@ -1,0 +1,13 @@
+[Unit]
+Description=Run bash script 2 mins after startup & every 24hrs afterwards
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Restart=always
+RestartSec=10
+RuntimeMaxSec=24hr
+ExecStart=/bin/bash /home/octopus/maintenance-script.sh
+
+[Install]
+WantedBy=multi-user.target
