@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+OCTOPUS_HOME=/home/octopus
 ANSIBLE_BIN_PATH=/home/octopus/.local/bin
 ANSIBLE_CONTROL_NODE_URL='https://github.com/OOHehir/ansible_rpi.git'
 PATH=$PATH:/home/octopus/.local/bin
@@ -16,21 +16,21 @@ first_boot_setup () {
 
     # Setup Ansible requirements
     echo "Installing Ansible requirements"
-    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $HOME/ansible_rpi/requirements.yml
+    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $OCTOPUS_HOME/ansible/requirements.yml
 
     # If successful, create a file to indicate that the first boot setup has been completed
-    mkdir -p $HOME
-    echo $(date) > $HOME/ansible-first-boot.log
+    mkdir -p $OCTOPUS_HOME
+    echo $(date) > $OCTOPUS_HOME/ansible-first-boot.log
 }
 
 update_and_run_ansible () {
     #/usr/bin/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d /home/octopus/ansible --diff playbook.yml
-    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $HOME/ansible --diff playbook.yml
-    # ansible-pull -U $HOME/ansible_rpi -C main playbook.yml
+    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $OCTOPUS_HOME/ansible --diff playbook.yml
+    # ansible-pull -U $OCTOPUS_HOME/ansible_rpi -C main playbook.yml
 
     # log the operation, continue if file doesn't exist
-    rm $HOME/ansible.log || true
-    echo $(date) > $HOME/ansible.log
+    rm $OCTOPUS_HOME/ansible.log || true
+    echo $(date) > $OCTOPUS_HOME/ansible.log
 }
 
 # Check if the script is running as root
@@ -40,7 +40,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Check if this is the first boot
-if [ -f $HOME_PATH/ansible-first-boot.log ]; then
+if [ -f $OCTOPUS_HOME/ansible-first-boot.log ]; then
   echo "This is not the first boot"
 else
   echo "This is the first boot"
