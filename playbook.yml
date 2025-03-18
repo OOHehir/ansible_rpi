@@ -92,7 +92,8 @@
       with_items:
         - "{{ repo_path }}misc/led.service"
         - "{{ repo_path }}misc/button.service"
-        - "{{ repo_path }}misc/ansible.service"
+        - "{{ repo_path }}misc/maintenance.service"
+        - "{{ repo_path }}misc/maintenance.timer"
 
     - name: Check services started
       ansible.builtin.systemd:
@@ -102,7 +103,8 @@
       with_items:
         - led.service
         - button.service
-        - ansible.service
+        # Don't start 'maintenance.service'
+        - maintenance.timer
         - mosquitto.service
 
     - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
