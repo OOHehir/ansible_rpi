@@ -42,10 +42,10 @@
         cmd: sh "{{ home_folder }}get-docker.sh"
         creates: /usr/bin/docker
 
-    - name: Ensure Docker Compose is installed
-      ansible.builtin.command:
-        cmd: pip install docker-compose
-        creates: /usr/local/bin/docker-compose
+    # - name: Ensure Docker Compose is installed
+    #   ansible.builtin.command:
+    #     cmd: pip install docker-compose
+    #     creates: /usr/local/bin/docker-compose
 
     - name: Ensure pip packages installed
       ansible.builtin.pip:
