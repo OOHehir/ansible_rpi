@@ -14,6 +14,10 @@ first_boot_setup () {
     echo "Installing ansible"
     sudo -H -u octopus python3 -m pip install --user ansible
 
+    # Setup Ansible requirements
+    echo "Installing Ansible requirements"
+    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $HOME/ansible_rpi/requirements.yml
+
     # If successful, create a file to indicate that the first boot setup has been completed
     mkdir -p $HOME
     echo $(date) > $HOME/ansible-first-boot.log
