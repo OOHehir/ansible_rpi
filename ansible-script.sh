@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-ANSIBLE_PATH=/home/octopus/ansible
+ANSIBLE_BIN_PATH=/home/octopus/.local/bin
 ANSIBLE_CONTROL_NODE_URL='https://github.com/OOHehir/ansible_rpi.git'
+PATH=$PATH:/home/octopus/.local/bin
 
 first_boot_setup () {
     # Apt update and install git
@@ -9,33 +10,23 @@ first_boot_setup () {
     echo "Installing git, python3-pip"
     apt install git python3-pip -y
 
-    # Install pip and ansible for user octopus
+    # Install ansible for user octopus
     echo "Installing ansible"
-    python3 -m pip install ansible
-
-    # Clone the ansible repository
-    # cd $ANSIBLE_PATH
-    # git clone $ANSIBLE_CONTROL_NODE_URL
+    sudo -H -u octopus python3 -m pip install --user ansible
 
     # If successful, create a file to indicate that the first boot setup has been completed
-    mkdir -p $ANSIBLE_PATH
-    echo $(date) > $ANSIBLE_PATH/ansible-first-boot.log
+    mkdir -p $HOME
+    echo $(date) > $HOME/ansible-first-boot.log
 }
 
 update_and_run_ansible () {
-    # Pull latest changes from the git repository
-    # cd $ANSIBLE_PATH/ansible_rpi
-    # Probably need to change this to a curl from a server
-    # git pull
-
-    # A little artificial but use eventually use this to update & run
     #/usr/bin/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d /home/octopus/ansible --diff playbook.yml
-    /usr/bin/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d /home/octopus/ansible --diff playbook.yml
-    # ansible-pull -U $ANSIBLE_PATH/ansible_rpi -C main playbook.yml
+    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $HOME/ansible --diff playbook.yml
+    # ansible-pull -U $HOME/ansible_rpi -C main playbook.yml
 
     # log the operation, continue if file doesn't exist
-    rm $ANSIBLE_PATH/ansible.log || true
-    echo $(date) > $ANSIBLE_PATH/ansible.log
+    rm $HOME/ansible.log || true
+    echo $(date) > $HOME/ansible.log
 }
 
 # Check if the script is running as root
@@ -45,7 +36,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Check if this is the first boot
-if [ -f $ANSIBLE_PATH/ansible-first-boot.log ]; then
+if [ -f $HOME_PATH/ansible-first-boot.log ]; then
   echo "This is not the first boot"
 else
   echo "This is the first boot"
