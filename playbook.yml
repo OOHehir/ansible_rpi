@@ -126,10 +126,10 @@
       ansible.builtin.git:
         repo: 'https://github.com/britkat1980/giv_tcp.git'
         dest: "{{ giv_tcp_path }}"
-        owner: octopus
-        group: octopus
         version: main
         update: true
+      become: true
+      become_user: octopus
 
     - name: Restart the giv_tcp Docker containers
       community.docker.docker_compose_v2:
