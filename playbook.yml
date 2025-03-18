@@ -137,7 +137,7 @@
         mode: '0644'
 
     - name: Restart giv_tcp docker container
-    # Need to be sudo for this to work
+      # Need to be sudo for this to work
       community.docker.docker_compose_v2:
         project_src: "{{ giv_tcp_path }}"
         state: restarted
