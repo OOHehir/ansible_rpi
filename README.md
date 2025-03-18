@@ -1,20 +1,28 @@
-## Setup
+# Ansible Playbook for Raspberry Pi
 
-### Install Ansible
+## Purpose
+This Ansible playbook is designed to setup a Raspberry Pi with the following:
+- Docker
+- Docker Compose
+- Git
+- Python3
+- Pip3
+- Ansible
+- GivTCP
 
+## Required files on fresh system
+ansible.cfg
+ansible-script.sh
+requirements.yml
+
+All other files are pulled in by script & Ansible.
+
+## How to copy files to remote system
 ```bash
-sudo apt update
-sudo apt-get install -y ansible git
+scp -r ansible.cfg ansible-script.sh requirements.yml octopus@octopuspi.local:/home/octopus/
 ```
 
-### Enable Ansible service
-
+## How to run
 ```bash
-sudo systemctl enable ansible
-sudo systemctl start ansible
+./ansible-script.sh
 ```
-
-### Running
-Ensure /home/octopus/ansible exists and is owned by octopus user.
-
-```bash

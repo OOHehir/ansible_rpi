@@ -1,22 +1,47 @@
 #!/usr/bin/env bash
 OCTOPUS_HOME=/home/octopus
-ANSIBLE_BIN_PATH=/home/octopus/.local/bin
+ANSIBLE_BIN_PATH=/home/octopus/.venv/bin
 ANSIBLE_CONTROL_NODE_URL='https://github.com/OOHehir/ansible_rpi.git'
 PATH=$PATH:/home/octopus/.local/bin
 
-first_boot_setup () {
-    # Apt update and install git
-    apt update
-    echo "Installing git, python3-pip"
-    apt install git python3-pip -y
+check_result () {
+    if [ $? -eq 0 ]; then
+        echo "Success"
+    else
+        echo "Failed"
+        exit 1
+    fi
+}
 
-    # Install ansible for user octopus
-    echo "Installing ansible"
-    sudo -H -u octopus python3 -m pip install --user ansible
+first_boot_setup () {
+    echo "Updating"
+    apt update
+    check_result
+
+    echo "Installing git, python3-pip"
+    apt install git python3-full python3-pip -y
+    check_result
+
+    echo "Checking for venv for octopus user"
+    # check if .venv directory exists, if not create it
+    if [ ! -d "$OCTOPUS_HOME/.venv" ]; then
+        echo "Creating venv for octopus user"
+        python3 -m venv $OCTOPUS_HOME/.venv
+        check_result
+    fi
+
+    # Activate venv and install Ansible
+    echo "Activating venv and installing Ansible"
+    source $OCTOPUS_HOME/.venv/bin/activate
+    check_result
+    echo "Installing Ansible"
+    pip install ansible
+    check_result
 
     # Setup Ansible requirements
     echo "Installing Ansible requirements"
-    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $OCTOPUS_HOME/ansible/requirements.yml
+    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $OCTOPUS_HOME/requirements.yml
+    check_result
 
     # If successful, create a file to indicate that the first boot setup has been completed
     mkdir -p $OCTOPUS_HOME
@@ -24,9 +49,9 @@ first_boot_setup () {
 }
 
 update_and_run_ansible () {
-    #/usr/bin/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d /home/octopus/ansible --diff playbook.yml
     $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $OCTOPUS_HOME/ansible --diff playbook.yml
     # ansible-pull -U $OCTOPUS_HOME/ansible_rpi -C main playbook.yml
+    check_result
 
     # log the operation, continue if file doesn't exist
     rm $OCTOPUS_HOME/ansible.log || true

@@ -23,21 +23,11 @@
         autoremove: true
         autoclean: true
 
-    - name: Create a directory if it does not exist
-      ansible.builtin.file:
-        path: /home/octopus
-        state: directory
-        mode: "0755"
-
     - name: Ensure apt packages are installed
       ansible.builtin.apt:
         name: "{{ item }}"
         state: present
       with_items:
-        - git
-        - python3
-        - python3-pip
-        # MQTT broker:
         - mosquitto
         - "{{ docker_requirements }}"
 
@@ -52,6 +42,11 @@
         cmd: sh "{{ home_folder }}get-docker.sh"
         creates: /usr/bin/docker
 
+    - name: Ensure Docker Compose is installed
+      ansible.builtin.command:
+        cmd: pip install docker-compose
+        creates: /usr/local/bin/docker-compose
+
     - name: Ensure pip packages installed
       ansible.builtin.pip:
         name: "{{ item }}"
@@ -60,8 +55,6 @@
         - rpi_ws281x
         - RPi.GPIO
         - flask
-        # Probably need to have run Docker script above first?
-        - docker-compose
 
     - name: Make octopus user execute docker commands
       ansible.builtin.user:
