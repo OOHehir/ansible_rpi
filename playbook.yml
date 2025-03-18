@@ -128,11 +128,11 @@
       # Replace - c:\config\GivTCP:/config/GivTCP with - /home/octopus/giv_tcp/config:/config/GivTCP
       ansible.builtin.lineinfile:
         path: "{{ giv_tcp_path }}/docker-compose.yml"
-        regexp: '^- /config/GivTCP'
+        search_string: '- c:\config\GivTCP:/config/GivTCP'
         line: '- /home/octopus/giv_tcp/config:/config/GivTCP'
-        state: present
-      become: true
-      become_user: octopus
+        owner: octopus
+        group: octopus
+        mode: '0644'
 
     - name: Restart the giv_tcp Docker containers
       community.docker.docker_compose_v2:
