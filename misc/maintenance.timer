@@ -2,7 +2,6 @@
 Description=Run maintenance script timer
 
 [Timer]
-OnBootSec=2min
 OnUnitActiveSec=24h
 Unit=maintenance.service
 
