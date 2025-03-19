@@ -26,3 +26,6 @@ scp -r ansible.cfg ansible-script.sh requirements.yml octopus@octopuspi.local:/h
 ```bash
 ./ansible-script.sh
 ```
+
+## GivTC
+Should be available on address: http://octopuspi.local:8099/config.html
