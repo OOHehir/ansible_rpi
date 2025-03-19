@@ -57,6 +57,12 @@
         - RPi.GPIO
         - flask
 
+    - name: Ensure group "docker" exists with correct gid
+      ansible.builtin.group:
+        name: docker
+        state: present
+        gid: 1750
+
     - name: Make octopus user execute docker commands
       ansible.builtin.user:
         name: octopus
