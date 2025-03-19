@@ -5,7 +5,7 @@ Description=Start Python script to handle button events
 Restart=on-failure
 RestartSec=10
 Type=idle
-ExecStart=/bin/bash -c 'cd /home/octopus/.venv/bin/ && python button_driver.py'
+ExecStart=/home/octopus/.venv/bin/python /home/octopus/button_driver.py
 
 [Install]
 WantedBy=multi-user.target
