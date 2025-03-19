@@ -117,7 +117,7 @@
         repo: 'https://github.com/britkat1980/giv_tcp.git'
         dest: "{{ giv_tcp_path }}"
         version: main
-        update: true
+        update: false
       become: true
       become_user: octopus
 
