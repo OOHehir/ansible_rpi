@@ -126,12 +126,32 @@
       become: true
       become_user: octopus
 
-    - name: Modify docker-compose file
-      # Replace - c:\config\GivTCP:/config/GivTCP with - /home/octopus/giv_tcp/config:/config/GivTCP
+    - name: Modify path in docker-compose file
       ansible.builtin.lineinfile:
+        # Replace - c:\config\GivTCP:/config/GivTCP with - /home/octopus/giv_tcp/config:/config/GivTCP
         path: "{{ giv_tcp_path }}/docker-compose.yml"
         search_string: '- c:\config\GivTCP:/config/GivTCP'
         line: '      - /home/octopus/giv_tcp/config:/config/GivTCP'
+        owner: octopus
+        group: octopus
+        mode: '0644'
+
+    - name: Remove version in docker-compose file
+      ansible.builtin.lineinfile:
+        # Remove 'version: "3.9"' line
+        path: "{{ giv_tcp_path }}/docker-compose.yml"
+        regexp: '^version:'
+        state: absent
+        owner: octopus
+        group: octopus
+        mode: '0644'
+
+    - name: Fix whitespace in docker-compose file
+      ansible.builtin.lineinfile:
+        # Remove trailing space from  - TZ = "Europe/London"
+        path: "{{ giv_tcp_path }}/docker-compose.yml"
+        regexp: '^- TZ = '
+        line: '- TZ='
         owner: octopus
         group: octopus
         mode: '0644'
@@ -142,4 +162,4 @@
         project_src: "{{ giv_tcp_path }}"
         state: restarted
       become: true
-      become_user: root
+      become_user: octopus
