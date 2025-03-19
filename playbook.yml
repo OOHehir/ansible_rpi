@@ -150,8 +150,8 @@
       ansible.builtin.lineinfile:
         # Remove trailing space from  - TZ = "Europe/London"
         path: "{{ giv_tcp_path }}/docker-compose.yml"
-        regexp: '^- TZ = '
-        line: '- TZ='
+        search_string: '- TZ = "Europe/London"'
+        line: '- TZ="Europe/London"'
         owner: octopus
         group: octopus
         mode: '0644'
