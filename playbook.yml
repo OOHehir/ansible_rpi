@@ -143,5 +143,5 @@
         project_src: "{{ giv_tcp_path }}"
         state: restarted
       become: true
-      become_user: root
+      become_user: sudo
       register: output
