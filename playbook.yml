@@ -75,16 +75,6 @@
       with_fileglob:
         - "python_scripts/*.py"
 
-    # - name: Update webserver files
-    #   ansible.builtin.copy:
-    #     src: "{{ item }}"
-    #     dest: "{{ www_dest_path }}"
-    #     mode: "0644"
-    #     owner: octopus
-    #     group: octopus
-    #   with_fileglob:
-    #     - "{{ repo_path }}/webpages/*"
-
     - name: Install service file
       ansible.builtin.copy:
         src: "{{ item }}"
@@ -103,12 +93,14 @@
         name: "{{ item }}"
         state: started
         enabled: true
+        daemon_reload: true
       with_items:
         - led.service
         - button.service
         # Don't start 'maintenance.service'
         - maintenance.timer
         - mosquitto.service
+
 
     - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
       # Restart required if this file is not previously present
