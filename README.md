@@ -1,7 +1,22 @@
 # Ansible Playbook for Raspberry Pi
+Sets up required packages for GivEnergy Inverter on Raspberry Pi
 
-## Purpose
-This Ansible playbook is designed to setup a Raspberry Pi with the following:
+## Base image
+```
+Raspberry Pi OS (Legacy) Lite - NO DESKTOP
+    Release date: October 22nd 2024
+    System: 64-bit
+    Kernel version: 6.1
+    Debian version: 11 (bullseye)
+```
+
+Download [link](https://downloads.raspberrypi.com/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2024-10-28/2024-10-22-raspios-bullseye-arm64-lite.img.xz)
+
+hostname: octopuspi
+
+username: octopus
+
+## Script & playbook installs & starts the following:
 - Docker
 - Docker Compose
 - Git
@@ -9,23 +24,30 @@ This Ansible playbook is designed to setup a Raspberry Pi with the following:
 - Pip3
 - Ansible
 - GivTCP
+- Mosquitto
 
 ## Required files on fresh system
-ansible.cfg
-ansible-script.sh
-requirements.yml
+- ansible.cfg
+- maintenance_script.sh
+- requirements.yml
 
 All other files are pulled in by script & Ansible.
 
-## How to copy files to remote system
+## Access
 ```bash
-scp -r ansible.cfg ansible-script.sh requirements.yml octopus@octopuspi.local:/home/octopus/
+ssh ssh octopus@octopuspi.local
+```
+
+## Copy files to remote system
+```bash
+scp -r ansible.cfg maintenance_script.sh requirements.yml octopus@octopuspi.local:/home/octopus/
 ```
 
 ## How to run
+Must be sudo
 ```bash
-./ansible-script.sh
+sudo ./maintenance_script.sh
 ```
 
 ## GivTC
-Interface available on address: http://octopuspi.local:8099
+Interface available on: http://octopuspi.local:8099
