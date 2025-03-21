@@ -103,7 +103,7 @@
         - led.service
         - button.service
         # Don't start 'maintenance.service'
-        - maintenance.timer
+        # TODO: - maintenance.timer
         - mosquitto.service
 
 
@@ -120,6 +120,7 @@
     - name: Check/ enable UART on RPi
       ansible.builtin.lineinfile:
         src: /boot/config.txt
+        after: "[all]"
         line: "enable_uart=1"
         mode: "0644"
         state: present
@@ -127,15 +128,15 @@
         group: root
         force: false
 
-    - name: Check/ enable console auto login for octopus user
-      #  /etc/systemd/system/getty@tty1.service.d/autologin.conf
-      ansible.builtin.copy:
-        src: "{{ repo_path }}/misc/autologin.conf"
-        dest: /
-        mode: "0644"
-        owner: root
-        group: root
-        force: false
+    # - name: Check/ enable console auto login for octopus user
+    #   #  /etc/systemd/system/getty@tty1.service.d/autologin.conf
+    #   ansible.builtin.copy:
+    #     src: "{{ repo_path }}/misc/autologin.conf"
+    #     dest: /
+    #     mode: "0644"
+    #     owner: root
+    #     group: root
+    #     force: false
 
     - name: Checkout giv_tcp repository
       ansible.builtin.git:
