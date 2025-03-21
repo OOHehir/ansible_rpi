@@ -58,10 +58,16 @@ update_and_run_ansible () {
     echo $(date) > $OCTOPUS_HOME/ansible.log
 }
 
+# Check if this is running already (i.e called via service)
+if pidof -x "$0" -o $$ >/dev/null; then
+    echo "Already running, exiting"
+    exit 1
+fi
+
 # Check if the script is running as root
 if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
+    then echo "Please run as root"
+    exit
 fi
 
 # Check if this is the first boot
