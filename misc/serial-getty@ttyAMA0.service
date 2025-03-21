@@ -1,0 +1,1 @@
+ExecStart=-/sbin/agetty -o '-p -f -- \\u' --keep-baud --autologin octopus 115200,57600,38400,9600 - $TERM
