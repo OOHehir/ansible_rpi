@@ -12,9 +12,9 @@ Raspberry Pi OS (Legacy) Lite - NO DESKTOP
 
 Download [link](https://downloads.raspberrypi.com/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2024-10-28/2024-10-22-raspios-bullseye-arm64-lite.img.xz)
 
-hostname: octopuspi
-
-username: octopus
+Use the following to create the image:
+- hostname: octopuspi
+- username: octopus
 
 ## Script & playbook installs & starts the following:
 - Docker
