@@ -17,9 +17,10 @@
 
   tasks:
     - name: Update the system
+      # Update but don't upgrade in case of breaking changes
       ansible.builtin.apt:
         update_cache: true
-        upgrade: dist
+        upgrade: safe
         autoremove: true
         autoclean: true
 
@@ -118,15 +119,15 @@
         force: false
 
     - name: Check/ enable UART on RPi
+      # Needs to be after [all] in /boot/config.txt
       ansible.builtin.lineinfile:
-        src: /boot/config.txt
-        after: "[all]"
+        path: /boot/config.txt
         line: "enable_uart=1"
-        mode: "0644"
+        insertafter: "^#\[all\]"
         state: present
         owner: root
         group: root
-        force: false
+        mode: "0644"
 
     # - name: Check/ enable console auto login for octopus user
     #   #  /etc/systemd/system/getty@tty1.service.d/autologin.conf
