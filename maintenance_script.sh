@@ -49,7 +49,7 @@ first_boot_setup () {
 }
 
 update_and_run_ansible () {
-    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $OCTOPUS_HOME/ansible --diff playbook.yml
+    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $OCTOPUS_HOME/ansible --diff playbook.yml -v
     # ansible-pull -U $OCTOPUS_HOME/ansible_rpi -C main playbook.yml
     check_result
 
@@ -72,9 +72,9 @@ fi
 
 # Check if this is the first boot
 if [ -f $OCTOPUS_HOME/ansible-first-boot.log ]; then
-  echo "This is not the first boot"
+  echo "This is not the first run"
 else
-  echo "This is the first boot"
+  echo "This is the first run"
   first_boot_setup
 fi
 
