@@ -127,17 +127,29 @@
         state: present
         owner: root
         group: root
-        mode: "0644"
+        mode: "0755"
 
-    # - name: Check/ enable console auto login for octopus user
-    #   #  /etc/systemd/system/getty@tty1.service.d/autologin.conf
-    #   ansible.builtin.copy:
-    #     src: "{{ repo_path }}/misc/autologin.conf"
-    #     dest: /
-    #     mode: "0644"
-    #     owner: root
-    #     group: root
-    #     force: false
+    - name: Check/ enable serial console
+      # console=serial0,115200 needs to be present in /boot/cmdline.txt
+      ansible.builtin.lineinfile:
+        path": /boot/cmdline.txt
+        regexp: '\bconsole=serial0,115200\b'
+        state: present
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Check/ enable console auto login for octopus user
+      #  /etc/systemd/system/getty@tty1.service.d/autologin.conf
+      ansible.builtin.copy:
+        src: "{{ repo_path }}/misc/autologin.conf"
+        dest: /
+        mode: "0644"
+        owner: root
+        group: root
+        force: false
+
+
 
     - name: Checkout giv_tcp repository
       ansible.builtin.git:
