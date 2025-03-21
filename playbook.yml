@@ -122,8 +122,8 @@
       # Needs to be after [all] in /boot/config.txt
       ansible.builtin.lineinfile:
         path: /boot/config.txt
-        line: "enable_uart=1"
-        insertafter: "^#\[all\]"
+        line: 'enable_uart=1'
+        insertafter: '^#\[all\]'
         state: present
         owner: root
         group: root
