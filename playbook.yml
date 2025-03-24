@@ -55,7 +55,7 @@
         - docker-compose
         - rpi_ws281x
         - RPi.GPIO
-        - flask
+        - Flask
 
     - name: Ensure group "docker" exists with correct gid
       ansible.builtin.group:
