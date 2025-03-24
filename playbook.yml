@@ -42,11 +42,6 @@
         cmd: sh "{{ home_folder }}get-docker.sh"
         creates: /usr/bin/docker
 
-    # - name: Ensure Docker Compose is installed
-    #   ansible.builtin.command:
-    #     cmd: pip install docker-compose
-    #     creates: /usr/local/bin/docker-compose
-
     - name: Ensure pip packages installed
       ansible.builtin.pip:
         name: "{{ item }}"
@@ -79,6 +74,17 @@
         group: octopus
       with_fileglob:
         - "python_scripts/*.py"
+
+    - name: Copy template folder & contents to home folder
+      # Note: if path doesn't end with /, the directory itself with all contents is copied
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ home_folder }}"
+        mode: "0644"
+        owner: octopus
+        group: octopus
+      with_fileglob:
+        - "templates"
 
     - name: Install service file
       ansible.builtin.copy:
