@@ -93,6 +93,7 @@
         - "{{ repo_path }}misc/button.service"
         - "{{ repo_path }}misc/maintenance.service"
         - "{{ repo_path }}misc/maintenance.timer"
+        - "{{ repo_path }}misc/webserver.service"
 
     - name: Check services started
       ansible.builtin.systemd:
@@ -106,7 +107,7 @@
         # Don't start 'maintenance.service'
         # TODO: - maintenance.timer
         - mosquitto.service
-
+        - webserver.service
 
     - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
       # Restart required if this file is not previously present

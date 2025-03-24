@@ -132,3 +132,5 @@ dist
 
 .lock
 webpages/index.html.old
+
+__pycache__/

@@ -1,0 +1,14 @@
+[Unit]
+Description=Web application
+After=network.target
+
+[Service]
+User=octopus
+RestartSec=10
+WorkingDirectory=/home/octopus/
+Environment=FLASK_CONFIG=production
+ExecStart=ExecStart=/home/octopus/.venv/bin/python /home/octopus/webserver.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
