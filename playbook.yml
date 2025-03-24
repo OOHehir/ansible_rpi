@@ -8,7 +8,6 @@
     docker_requirements: [libffi-dev, libssl-dev]
     repo_path: /home/octopus/ansible/
     home_folder: /home/octopus
-    www_dest_path: /var/www/html
     giv_tcp_path: /home/octopus/giv_tcp
   become: true
   become_user: root
@@ -94,6 +93,7 @@
         - "{{ repo_path }}misc/maintenance.service"
         - "{{ repo_path }}misc/maintenance.timer"
         - "{{ repo_path }}misc/webserver.service"
+        - "{{ repo_path }}misc/serial-getty@ttyS0.service"
 
     - name: Check services started
       ansible.builtin.systemd:
@@ -108,6 +108,7 @@
         # TODO: - maintenance.timer
         - mosquitto.service
         - webserver.service
+        - serial-getty@ttyS0.service
 
     - name: Blacklist Broadcom audio driver (for WS2812 LEDs)
       # Restart required if this file is not previously present
