@@ -76,10 +76,10 @@
         - "python_scripts/*.py"
 
     - name: Copy template folder & contents to home folder
-      # Note: if path doesn't end with /, the directory itself with all contents is copied
+      # Folder created if doesn't exist
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ home_folder }}templates"
+        dest: "{{ home_folder }}/templates/"
         mode: "0644"
         owner: octopus
         group: octopus
