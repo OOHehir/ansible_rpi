@@ -84,7 +84,7 @@
         owner: octopus
         group: octopus
       with_fileglob:
-        - "templates"
+        - "templates/*"
 
     - name: Install service file
       ansible.builtin.copy:
