@@ -2,12 +2,11 @@
 Description=Web server for GivEnergy Bridge
 
 [Service]
-User=octopus
+Restart=on-failure
 RestartSec=10
-WorkingDirectory=/home/octopus/
-Environment=FLASK_CONFIG=production
+WorkingDirectory=/home/octopus
+Environment="FLASK_CONFIG=production"
 ExecStart=ExecStart=/home/octopus/.venv/bin/python /home/octopus/webserver.py
-Restart=always
 
 [Install]
 WantedBy=multi-user.target
