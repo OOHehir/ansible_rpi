@@ -79,7 +79,7 @@
       # Note: if path doesn't end with /, the directory itself with all contents is copied
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ home_folder }}"
+        dest: "{{ home_folder }}templates"
         mode: "0644"
         owner: octopus
         group: octopus
