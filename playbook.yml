@@ -131,26 +131,6 @@
         group: root
         mode: "0755"
 
-    # - name: Check/ enable serial console
-    #   # console=serial0,115200 needs to be present in /boot/cmdline.txt
-    #   ansible.builtin.lineinfile:
-    #     path": /boot/cmdline.txt
-    #     regexp: '\bconsole=serial0,115200\b'
-    #     state: present
-    #     owner: root
-    #     group: root
-    #     mode: "0755"
-
-    - name: Check/ enable auto login on ttyAMA0 for octopus user
-      # Create service file /etc/systemd/system/serial-getty@ttyAMA0.service.d
-      ansible.builtin.copy:
-        src: "{{ repo_path }}/misc/serial-getty@ttyAMA0.service"
-        dest: /etc/systemd/system/
-        mode: "0755"
-        owner: root
-        group: root
-        force: false
-
     - name: Checkout giv_tcp repository
       ansible.builtin.git:
         repo: 'https://github.com/britkat1980/giv_tcp.git'
