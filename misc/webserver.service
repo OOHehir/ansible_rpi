@@ -1,11 +1,10 @@
 [Unit]
 Description=Web server for GivEnergy Bridge
+After=network-online.target
 
 [Service]
 Restart=on-failure
 RestartSec=10
-WorkingDirectory=/home/octopus
-Environment="FLASK_CONFIG=production"
 ExecStart=ExecStart=/home/octopus/.venv/bin/python /home/octopus/webserver.py
 
 [Install]
