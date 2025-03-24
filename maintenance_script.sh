@@ -58,11 +58,9 @@ update_and_run_ansible () {
     echo $(date) > $OCTOPUS_HOME/ansible.log
 }
 
-# Check if this is running already (i.e called via service)
-if pidof -x "$0" -o $$ >/dev/null; then
-    echo "Already running, exiting"
-    exit 1
-fi
+# Check if this is running already
+# ref: https://man7.org/linux/man-pages/man1/flock.1.html
+[ "${FLOCKER}" != "$0" ] && exec env FLOCKER="$0" flock -en "$0" "$0" "$@" || :
 
 # Check if the script is running as root
 if [ "$EUID" -ne 0 ]
