@@ -49,7 +49,7 @@ first_boot_setup () {
 }
 
 update_and_run_ansible () {
-    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $OCTOPUS_HOME/ansible --diff playbook.yml
+    $ANSIBLE_BIN_PATH/ansible-pull -U https://github.com/OOHehir/ansible_rpi.git -d $OCTOPUS_HOME/ansible --diff playbook.yml -vvv
     # ansible-pull -U $OCTOPUS_HOME/ansible_rpi -C main playbook.yml
     check_result
 
