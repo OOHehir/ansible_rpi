@@ -40,7 +40,7 @@ first_boot_setup () {
 
     # Setup Ansible requirements
     echo "Installing Ansible requirements"
-    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $OCTOPUS_HOME/requirements.yml
+    sudo -H -u octopus $ANSIBLE_BIN_PATH/ansible-galaxy collection install -r $OCTOPUS_HOME/requirements.yml -vvv
     check_result
 
     # If successful, create a file to indicate that the first boot setup has been completed
