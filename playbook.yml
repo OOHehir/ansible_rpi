@@ -5,7 +5,9 @@
   vars:
     ansible_connection: local
     ansible_python_interpreter: "{{ansible_playbook_python}}"
+    apt_packages: [python3-full, python3-pip, git, ufw, mosquitto]
     docker_requirements: [libffi-dev, libssl-dev]
+    pip_packages: [docker-compose, rpi_ws281x, RPi.GPIO, Flask]
     repo_path: /home/octopus/ansible/
     home_folder: /home/octopus
     giv_tcp_path: /home/octopus/giv_tcp
@@ -28,7 +30,7 @@
         name: "{{ item }}"
         state: present
       with_items:
-        - mosquitto
+        - "{{ apt_packages }}"
         - "{{ docker_requirements }}"
 
     - name: Get Docker Convenience Script
@@ -47,12 +49,9 @@
         name: "{{ item }}"
         state: present
       with_items:
-        - docker-compose
-        - rpi_ws281x
-        - RPi.GPIO
-        - Flask
+        - "{{ pip_packages }}"
 
-    - name: Ensure group "docker" exists with correct gid
+    - name: Ensure group "docker" exists
       ansible.builtin.group:
         name: docker
         state: present
