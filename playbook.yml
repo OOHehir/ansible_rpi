@@ -85,12 +85,12 @@
       with_fileglob:
         - "python_scripts/templates/*"
 
-    - name: Open HTTP port
-    # ansible.builtin.ufw is part of the community.general collection
-      ansible.builtin.ufw:
-        rule: allow
-        port: '8080'
-        proto: tcp
+    # - name: Open HTTP port
+    # # ansible.builtin.ufw is part of the community.general collection
+    #   ansible.builtin.ufw:
+    #     rule: allow
+    #     port: '8080'
+    #     proto: tcp
 
     - name: Install service file
       ansible.builtin.copy:
